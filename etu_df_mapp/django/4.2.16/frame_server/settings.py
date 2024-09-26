@@ -243,7 +243,8 @@ if LOG_LEVEL not in ['DEBUG', 'INFO']:
 
 # 新增模块注册日志
 loggers_app = [
-    "utils.frame",
+    "utils",
+    "frontend",
 ]
 from .log import CustomLogConfig
 LOGGING = CustomLogConfig().set_logging(LOG_LEVEL, loggers_app)

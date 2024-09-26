@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019-10-10 17:32
 # @Author  : Jieay
-# @File    : home_view.py
+# @File    : views.py
 import json
 from importlib import import_module
 from django.conf import settings

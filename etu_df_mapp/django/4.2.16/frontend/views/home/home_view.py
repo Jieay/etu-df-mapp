@@ -15,7 +15,7 @@ from utils.user.membersapi import get_view_request_token
 from utils.comm.session_api import set_response_session_key
 
 
-@login_required(login_url='/frd/login')
+@login_required(login_url='/login')
 def index(request):
     token = get_view_request_token(request)
     # 检查cookies是否有session_key
