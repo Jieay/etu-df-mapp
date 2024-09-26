@@ -57,13 +57,13 @@ def up_aksk_to_db(username):
     return data
 
 
-def get_request_token(request):
+def get_rest_request_token(request):
     """
-    通过请求获取 Token
+    通过 rest API 类型请求获取 Token, 检查接口是的带Token以及对应Token的用户信息
     Args:
         request: 请求实例
 
-    Returns: `obj`
+    Returns: `obj` Token关联的用户表，用户model
     """
     auth = get_authorization_header(request).split()
     if len(auth) == 2:
@@ -74,6 +74,51 @@ def get_request_token(request):
     return token
 
 
+def get_token_from_user_obj(user):
+    """
+    通过用户model获取token
+    Args:
+        user: `model` 用户model
+
+    Returns: `str`
+    """
+    token_obj = Token.objects.filter(user=user)
+    if token_obj.exists():
+        token = token_obj[0].key
+    else:
+        Token.objects.update_or_create(user=user)
+        token = ''
+    return token
+
+
+def check_user_is_active_to_token(user):
+    """
+    检查激活用是否已经创建 Token，没有创建则创建 Token
+    Args:
+        user: `model` 用户model
+
+    Returns:
+    """
+    if user:
+        token = get_token_from_user_obj(user)
+        if not token and user.is_active:
+            Token.objects.update_or_create(user=user)
+
+
+def get_view_request_token(request):
+    """
+    通过普通页面请求，即 django.template 视图
+    Args:
+        request: 请求实例
+
+    Returns: `str` token
+    """
+    # 用户 model
+    user = request.user
+    check_user_is_active_to_token(user)
+    return get_token_from_user_obj(user)
+
+
 class GetUserInfo(object):
     """用户信息"""
 
@@ -82,7 +127,7 @@ class GetUserInfo(object):
 
     def get_token(self):
         """获取Token"""
-        return get_request_token(self.request)
+        return get_rest_request_token(self.request)
 
     def get_user_info(self):
         """获取用户信息"""

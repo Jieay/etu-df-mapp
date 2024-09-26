@@ -17,7 +17,6 @@ from django.contrib.auth import login as auth_login
 from django.contrib.auth import logout as auth_logout
 from django.contrib.auth import authenticate
 from utils.frame.api_view_external import BaseOpenApiView
-from utils.frame.drf_spectacular_external import CustomDrfSpectacularResponse
 from drf_spectacular.utils import extend_schema
 from utils.comm.gen_captcha import get_captcha as img_captcha
 

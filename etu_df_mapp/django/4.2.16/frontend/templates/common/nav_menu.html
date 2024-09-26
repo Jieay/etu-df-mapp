@@ -20,12 +20,6 @@
   </div>
   <div class="layui-col-xs9">
     <ul class="layui-nav" style="text-align: right;">
-{#      <li class="layui-nav-item">#}
-{#        <a href="{% url 'admin:index' %}">执行任务<span class="layui-badge-dot"></span></a>#}
-{#      </li>#}
-{#      <li class="layui-nav-item">#}
-{#        <a href="{% url 'admin:index' %}">任务管理<span class="layui-badge-dot"></span></a>#}
-{#      </li>#}
       <li class="layui-nav-item">
         <a href="{% url 'home_index' %}">首页</a>
       </li>
@@ -50,14 +44,12 @@
 
 {% include 'common/footer.html' %}
 
-{#<script>#}
-{#  layui.use([], function () {#}
-{#    let session_key = '{{ request.cookies.session_key }}'#}
-{#    if (!session_key) {#}
-{#      window.location.href = "{% url 'cas_ng_login' %}"#}
-{#    }#}
-{#  });#}
-{#</script>#}
+<script>
+  layui.use(['xiezhiMod'], function () {
+    let xiezhiMod = layui.xiezhiMod;
+    xiezhiMod.checkSessionKey('{{ request.COOKIES.session_key }}', "{% url 'login' %}");
+  });
+</script>
 {% block script %}
 
 {% endblock %}

@@ -31,7 +31,8 @@ SessionStore = import_module(settings.SESSION_ENGINE).SessionStore
 
 from django_cas_ng.views import LoginView, LogoutView
 from rest_framework.authtoken.models import Token
-from utils.comm.commapi import get_base64_encoded, check_json_format
+from utils.comm.commapi import check_json_format
+from utils.comm.session_api import set_response_session_key
 
 import logging
 
@@ -87,23 +88,6 @@ def clean_sessions(client, request):
             SessionTicket.objects.filter(session_key=st.session_key).delete()
         except SessionTicket.DoesNotExist:
             pass
-
-
-def get_session_key_expire():
-    try:
-        session_key_expire = settings.COOKIE_SESSION_KEY_EXPIRE_MINUTES * 60
-    except Exception as e:
-        logger.error(e)
-        session_key_expire = 60 * 60 * 24 * 30
-    return session_key_expire
-
-
-def set_response_session_key(response, token):
-    sk_expire = get_session_key_expire()
-    session_key = get_base64_encoded(token)
-    response.set_cookie(key='session_key', value=session_key, max_age=sk_expire, expires=sk_expire)
-    logger.debug(f'登录成功, session_key: {session_key}')
-    return response
 
 
 class CasLoginView(LoginView):
@@ -162,7 +146,7 @@ class CasLoginView(LoginView):
         request.session['user'] = {'user': user.username}
         request.session['login-type'] = 'cas'
         request.session['frontend_name'] = f"{settings.FRONTEND_NAME}"
-        return set_response_session_key(response=response, token=token)
+        return set_response_session_key(response=response, token=token, msg='登录成功')
 
     def post(self, request: HttpRequest) -> HttpResponse:
         next_page = clean_next_page(request, request.POST.get('next', settings.CAS_REDIRECT_URL))

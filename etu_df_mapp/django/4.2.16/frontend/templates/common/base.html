@@ -18,14 +18,12 @@
 
 {% include 'common/footer.html' %}
 
-{#<script>#}
-{#  layui.use([], function () {#}
-{#    let session_key = '{{ request.cookies.session_key }}'#}
-{#    if (!session_key) {#}
-{#      window.location.href = "{% url 'cas_ng_login' %}"#}
-{#    }#}
-{#  });#}
-{#</script>#}
+<script>
+  layui.use(['xiezhiMod'], function () {
+    let xiezhiMod = layui.xiezhiMod;
+    xiezhiMod.checkSessionKey('{{ request.COOKIES.session_key }}', "{% url 'login' %}");
+  });
+</script>
 {% block script %}
 
 {% endblock %}
